@@ -1,44 +1,41 @@
-import React, { useState } from 'react';
-import cors from 'cors';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const PaymentLink = () => {
-  const [response, setResponse] = useState(null);
+const PaymentLinks = () => {
+  const [paymentLinks, setPaymentLinks] = useState([]);
 
-  const handleApiCall = async () => {
-    try {
-      const response = await fetch('https://buy.stripe.com/test_4gwbJT7V3dFc6086os', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer sk_test_51OYR9aEIh7QF36eeR7Yw8aeaRaCY3eGCyxwHCOE7mXmB877vSyki3GXNJyWm0LSJumWKZilktpflrCreJzcDWRYY00eaxDaLB2',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Cookie': 'cid=8fbf5b0b-c774-484a-bc01-ca8292e432b2',
-        },
-        body: new URLSearchParams({
-          'line_items[][price]': 'price_1OeadeEIh7QF36eeFQaRgfFn',
-          'line_items[][quantity]': '1',
-          'payment_method_types[]': 'card',
-        }).toString(),
-      });
+  useEffect(() => {
+    const fetchPaymentLinks = async () => {
+      try {
+        const response = await axios.get('https://api.stripe.com/v1/payment_intents', {
+          headers: {
+            'Authorization': 'Bearer sk_test_51OYR9aEIh7QF36eeR7Yw8aeaRaCY3eGCyxwHCOE7mXmB877vSyki3GXNJyWm0LSJumWKZilktpflrCreJzcDWRYY00eaxDaLB2',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        });
 
-      const data = await response.json();
-      setResponse(data);
-    } catch (error) {
-      console.error('Error calling API:', error);
-    }
-  };
+
+        setPaymentLinks(record);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchPaymentLinks();
+  }, []);
 
   return (
     <div>
-      <button onClick={handleApiCall}>Payment Link API</button>
-
-      {response && (
-        <div>
-          <h2>API Response:</h2>
-          <pre>{JSON.stringify(response, null, 2)}</pre>
-        </div>
-      )}
+      <h1>Payment Links Listing</h1>
+      <ul>
+        {paymentLinks.map((paymentLink) => (
+          <li key={paymentLink.id}>
+            Payment Link ID: {paymentLink.id}, Amount: {paymentLink.amount / 100} {paymentLink.currency}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
-export default PaymentLink;
+export default PaymentLinks;
