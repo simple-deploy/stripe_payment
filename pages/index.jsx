@@ -1,13 +1,19 @@
 import Stripe from './components/Stripe';
-import CurrencyList from './components/CurrencyList';
-import PaymentLink from './components/PaymentLink';
+// import Transaction from './components/Transaction';
+// import PdfGenerator from './components/PdfGenerator';
+import InvoiceList from './components/InvoiceList';
+import DownloadPdf from './components/DownloadPdf';
+
 
 const Home = () => {
   return (
     <div>
       <h1>Stripe Payment</h1>
       <Stripe />
-      <PaymentLink />
+      {/* <Transaction />
+      <PdfGenerator /> */}
+      <InvoiceList />
+      {/* <DownloadPdf /> */}
     </div>
   );
 };
